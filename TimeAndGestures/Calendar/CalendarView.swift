@@ -3,6 +3,7 @@ import SwiftUI
 struct CalendarView: View {
     @State private var isShowingEventModal = false
     @State private var selectedDate = Date()
+    @State private var isTwinChatPresented = false
     let tasks = CalendarTask.sampleTasks
 
     var body: some View {
@@ -19,12 +20,31 @@ struct CalendarView: View {
                     TaskListView(tasks:tasks, selectedDate: selectedDate)
                 }
                 .padding(.top)
+                
+                // Кнопка в правом нижнем углу
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            isTwinChatPresented = true
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.appTeal)
+                                .font(.system(size: 40))
+                        }
+                        .padding([.bottom, .trailing], 16)
+                    }
+                }
             }
         }
         .sheet(isPresented: $isShowingEventModal) {
             EventModal()
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $isTwinChatPresented) {
+            DefaultTwinChat(date: selectedDate)
         }
     }
 }
